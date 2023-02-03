@@ -2,19 +2,13 @@ from fastapi import FastAPI, HTTPException
 from database import SessioLocal
 from sqlalchemy import text
 from controllers import BSC_USUARIO
+from controllers import BSC_PAIS
+
 
 app = FastAPI()
 
 app.include_router(BSC_USUARIO.router)
-
-
-@app.get("/bscpais")
-def bscpais():
-    session = SessioLocal()
-    query = text("SELECT * FROM BSC_PAIS")
-    result = session.execute(query)
-    rows = [dict(zip(result.keys(), row)) for row in result]
-    return rows
+app.include_router(BSC_PAIS.router)
 
 
 @app.get("/bscdep/{id}")
