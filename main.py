@@ -1,38 +1,12 @@
-from fastapi import FastAPI, HTTPException
-from database import SessioLocal
-from sqlalchemy import text
-from controllers import BSC_USUARIO
-from controllers import BSC_PAIS
-
+from fastapi import FastAPI
+from routers import BSC_USUARIO, BSC_PAIS, MAP_PARTICANTES, BSC_DEPARTAMENTO
 
 app = FastAPI()
 
 app.include_router(BSC_USUARIO.router)
 app.include_router(BSC_PAIS.router)
-
-
-@app.get("/bscdep/{id}")
-def bscdep(id: str):
-    rs = get_request(
-        "SELECT * FROM BSC_DEPARTAMENTO WHERE ID_DEPARTAMENTO = "+id)
-    if len(rs) > 0:
-        return rs
-    else:
-        raise HTTPException(status_code=204)
-
-
-@app.get('/mappract')
-def bscpract():
-    return get_request("SELECT * FROM MAP_PRACTICANTE")
-
-
-def get_request(querystring: str):
-    session = SessioLocal()
-    query = text(querystring)
-    result = session.execute(query)
-    rows = [dict(zip(result.keys(), row)) for row in result]
-    return rows
-
+app.include_router(MAP_PARTICANTES.router)
+app.include_router(BSC_DEPARTAMENTO.router)
 
 # class Item(BaseSQL):
 #     __tablename__ = "BSC_PAIS"

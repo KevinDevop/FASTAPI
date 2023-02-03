@@ -5,5 +5,5 @@ router = APIRouter()
 
 
 @router.get('/bscusuario')
-def getBscUsuario():
+async def getBscUsuario():
     return defFunc.get_request('SELECT * FROM BSC_USUARIO')

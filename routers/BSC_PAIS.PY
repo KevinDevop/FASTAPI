@@ -5,5 +5,5 @@ router = APIRouter()
 
 
 @router.get("/bscpais")
-def bscpais():
+async def bscpais():
     return defFunc.get_request("SELECT * FROM BSC_PAIS")
