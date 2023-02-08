@@ -1,25 +1,23 @@
-from fastapi import FastAPI
-from routers import BSC_USUARIO, BSC_PAIS, MAP_PARTICANTES, BSC_DEPARTAMENTO
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
+from Models.BSC_PAIS_MODEL import BSC_PAIS
+from Schemas.BSC_PAIS import BSC_PAISSchema
+from db import get_db
+
 
 app = FastAPI()
 
-app.include_router(BSC_USUARIO.router)
-app.include_router(BSC_PAIS.router)
-app.include_router(MAP_PARTICANTES.router)
-app.include_router(BSC_DEPARTAMENTO.router)
 
-# class Item(BaseSQL):
-#     __tablename__ = "BSC_PAIS"
-#     ID_PAIS = Column(Integer, primary_key=True, index=True)
-#     NOMB_PAIS = Column(String, index=True)
+# Crear la ruta GET
 
 
-# def create_item(db, item):
-#     db.add(item)
+@app.get("/BSC_PAIS")
+async def GetAllPais(db: Session = Depends(get_db)):
+    paises = db.query(BSC_PAIS).all()
+    return [BSC_PAISSchema(ID_PAIS=pais.id_pais, NOMB_PAIS=pais.nomb_pais) for pais in paises]
 
-# @app.post("/POST_PAIS/")
-# async def post_pais(item: Item):
-#     db = SessioLocal()
-#     create_item(db, item)
-#     db.commit()
-#     db.close()
+
+@app.get("/BSC_PAIS/{id_pais}")
+async def GetPais(id_pais: int, db: Session = Depends(get_db)):
+    user = db.query(BSC_PAIS).get(id_pais)
+    return {"id": user.id_pais, "name": user.nomb_pais}
