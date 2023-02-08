@@ -8,5 +8,5 @@ Base = declarative_base()
 
 class BSC_PAIS(Base):
     __tablename__ = "BSC_PAIS"
-    id_pais = Column(Integer, primary_key=True)
+    id_pais = Column(Integer, primary_key=True, autoincrement=True)
     nomb_pais = Column(String)
