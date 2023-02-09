@@ -1,6 +1,4 @@
-from fastapi import FastAPI, Depends
-from Schemas.BSC_PAIS import BSC_PAISSchema
-from Models.BSC_PAIS_MODEL import BSC_PAIS
+from fastapi import FastAPI
 from Routes import pais, departamento
 
 

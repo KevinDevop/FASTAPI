@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Path
 from sqlalchemy.orm import Session
-from Models.BSC_PAIS_MODEL import BSC_PAIS
+from Models.Models import BSC_PAIS
 from Schemas.BSC_PAIS import BSC_PAISSchema, BSC_PAISSchemaPost
 from db import get_db
 
