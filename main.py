@@ -1,14 +1,14 @@
 from fastapi import FastAPI, Depends
 from Schemas.BSC_PAIS import BSC_PAISSchema
 from Models.BSC_PAIS_MODEL import BSC_PAIS
-from db import get_db
-from sqlalchemy.orm import Session
-from Routes import pais
+from Routes import pais, departamento
 
 
 app = FastAPI()
 
 app.include_router(pais.routePais)
+app.include_router(departamento.router)
+
 
 @app.get("/")
 async def default():
