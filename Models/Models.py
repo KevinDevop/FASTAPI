@@ -17,3 +17,16 @@ class BSC_DEPARTAMENTO(Base):
     nombre_departamento = Column(String)
     id_pais = Column(Integer, ForeignKey('BSC_PAIS.id_pais'))
     pais = relationship("BSC_PAIS")
+
+
+class MAP_PISO(Base):
+    __tablename__ = 'MAP_PISO'
+    id_piso = Column(Integer, primary_key=True)
+    desc_piso = Column(String, nullable=False)
+
+
+class MAP_ADMINISTRATIVO(Base):
+    __tablename__ = "MAP_ADMINISTRATIVO"
+    id_lider_administrativo = Column(
+        Integer, primary_key=True, autoincrement=True)
+    nombre_administrativo = Column(String, nullable=False)
