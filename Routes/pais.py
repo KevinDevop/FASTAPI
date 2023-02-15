@@ -5,16 +5,16 @@ from Schemas.BSC_PAIS import BSC_PAISSchema, BSC_PAISSchemaPost
 from db import get_db
 
 
-routePais = APIRouter(prefix="/BSC_PAIS", tags=["BSC_PAIS"])
+route = APIRouter(prefix="/BSC_PAIS", tags=["BSC_PAIS"])
 
 
-@routePais.get('/')
+@route.get('/')
 async def GetAllPais(db: Session = Depends(get_db)):
     paises = db.query(BSC_PAIS).all()
     return [BSC_PAISSchema(ID_PAIS=pais.id_pais, NOMB_PAIS=pais.nomb_pais) for pais in paises]
 
 
-@routePais.get("/{id_pais}")
+@route.get("/{id_pais}")
 async def GetPais(id_pais: int = Path(..., ge=1), db: Session = Depends(get_db)):
     pais = db.query(BSC_PAIS).get(id_pais)
     if pais is None:
@@ -23,7 +23,7 @@ async def GetPais(id_pais: int = Path(..., ge=1), db: Session = Depends(get_db))
     return BSC_PAISSchema(ID_PAIS=pais.id_pais, NOMB_PAIS=pais.nomb_pais)
 
 
-@routePais.post("/")
+@route.post("/")
 async def PostPais(bsc_pais_schema_post: BSC_PAISSchemaPost, db: Session = Depends(get_db)):
     pais = BSC_PAIS(nomb_pais=bsc_pais_schema_post.NOMB_PAIS)
     db.add(pais)
