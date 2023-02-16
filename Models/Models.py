@@ -131,7 +131,7 @@ class MAP_INSTITUCION(Base):
 class MAP_ENTRENAMIENTO(Base):
     __tablename__ = "MAP_ENTRENAMIENTO"
     id_lider_entrenamiento = Column(Integer, primary_key=True)
-    nombre_entrenamientos = Column(String, nullable=False)
+    nombre_entrenamiento = Column(String, nullable=False)
     entrenamiento_practicante = relationship(
         "MAP_PRACTICANTE", back_populates="entrenamiento")
 
@@ -164,8 +164,9 @@ class MAP_PRACTICANTE(Base):
     __tablename__ = "MAP_PRACTICANTE"
     id_practicante = Column(Integer, primary_key=True)
     codigo_practicante = Column(String, nullable=False)
-    duracion_practicante = Column(String, nullable=False)
+    duracion_practica = Column(String, nullable=False)
     fecha_ingreso = Column(DATE, nullable=False)
+    acceso_biometrico = Column(String, nullable=False)
     id_tipo_practica = Column(
         Integer, ForeignKey(MAP_TIPO_PRACTICA.id_practica), nullable=False)
     id_institucion = Column(Integer, ForeignKey(
