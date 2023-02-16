@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from db import get_db
 from Models.Models import BSC_DEPARTAMENTO, BSC_PAIS
 from Schemas.BSC_DEPARTAMENTO import BSC_DEPARTAMENTOSchema, BSC_DEPARTAMENTO_PAISSchema
-from exeptions import NotFound
 
 route = APIRouter(prefix="/BSC_DEPARTAMENTO", tags=["BSC_DEPARTAMENTO"])
 
