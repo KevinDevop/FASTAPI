@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from Routes import administrativos, departamento, pais, piso, bsc_idioma, bsc_usuario, bsc_ciudad, map_practicante
+from Routes import administrativos, departamento, pais, piso, bsc_idioma, bsc_usuario, bsc_ciudad, map_practicante, bsc_login
 
 app = FastAPI()
 
@@ -11,6 +11,7 @@ app.include_router(administrativos.route)
 app.include_router(piso.route)
 app.include_router(bsc_idioma.route)
 app.include_router(map_practicante.route)
+app.include_router(bsc_login.route)
 
 
 @app.get("/")

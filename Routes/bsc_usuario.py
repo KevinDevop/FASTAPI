@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session, joinedload
-from Models.Models import BSC_USUARIO, BSC_GENERO, BSC_ROL, BSC_CIUDAD, BSC_ESTADO
-from Schemas.BSC_USUARIO import BSC_USUARIO_SCHEMA, BSC_USUARIO_COMPLET_SCHEMA
+from Models.Models import BSC_USUARIO
+from Schemas.BSC_USUARIO import BSC_USUARIO_SCHEMA, BSC_USUARIO_COMPLET_SCHEMA, BSC_USUARIO_POST_SCHEMA
 from db import get_db
 
 
@@ -52,3 +52,26 @@ async def getUsarioComplet(db: Session = Depends(get_db)):
     #           for usuario, genero, rol, ciudad, estado in usuarios]
 
     # return result
+
+
+@route.post("/", description="Guarda un registro de usuario.")
+async def postUsuario(usuario_post_schema: BSC_USUARIO_POST_SCHEMA, db: Session = Depends(get_db)):
+    usuario = BSC_USUARIO(
+        nombre_apellido_usuario=usuario_post_schema.NOMBRE_APELLIDO_USUARIO,
+        cedula_usuario=usuario_post_schema.CEDULA_USUARIO,
+        fecha_nacimiento=usuario_post_schema.FECHA_NACIMIENTO,
+        correo_personal_usuario=usuario_post_schema.CORREO_PERSONAL_USUARIO,
+        direccion_usuario=usuario_post_schema.DIRECCION_USUARIO,
+        estado_logico_usuario=usuario_post_schema.ESTADO_LOGICO_USUARIO,
+        telefono_usuario=usuario_post_schema.TELEFONO_USUARIO,
+        foto_usuario=usuario_post_schema.FOTO_USUARIO,
+        id_rol=usuario_post_schema.ID_ROL,
+        id_ciudad=usuario_post_schema.ID_CIUDAD,
+        id_genero=usuario_post_schema.ID_GENERO,
+        id_estado=usuario_post_schema.ID_ESTADO)
+
+    db.add(usuario)
+    db.commit()
+    db.refresh(usuario)
+
+    return usuario
