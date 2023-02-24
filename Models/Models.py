@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DATE, SmallInteger
+from sqlalchemy import Column, Integer, String, ForeignKey, DATE, SmallInteger, DATETIME
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -71,7 +71,7 @@ class BSC_BITACORA(Base):
     id_bitacora = Column(Integer, primary_key=True, autoincrement=True)
     accion_bitacora = Column(String, nullable=False)
     descripcion_bitacora = Column(String, nullable=False)
-    fecha_creacion_bitacora = Column(String, nullable=False)
+    fecha_creacion_bitacora = Column(DATETIME, nullable=False)
     id_usuario = Column(Integer, ForeignKey(
         BSC_USUARIO.id_usuario), nullable=False)
     usuario = relationship("BSC_USUARIO")
