@@ -10,6 +10,10 @@ class BSC_LOGIN_SCHEMA(BaseModel):
     COD_VERIFICACION_LOGIN: str
 
 
+class BSC_LOGIN_VERIFY_SCHEMA(BaseModel):
+    COD_VERIFICACION_LOGIN = str
+
+
 class LoginCreateModel(BaseModel):
     EMAIL_CORPORATIVO_LOGIN: str
     CONTRASEÑA_LOGIN: str
