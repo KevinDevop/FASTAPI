@@ -26,11 +26,22 @@ async def getLogin(db: session = Depends(get_db)):
 
 
 @route.put("/verificacion/{email}", description="Verificación de correo")
-async def putVerificacionCorreo(verificacion: BSC_LOGIN_VERIFY_SCHEMA, email: str, db: session = Depends(get_db)):
-    login = db.query(BSC_LOGIN).filter(
+async def putVerificacionCorreo(email: str, codigo: str, db: session = Depends(get_db)):
+    buscar_correo = db.query(BSC_LOGIN).filter(
         BSC_LOGIN.email_corporativo_login == email).first()
 
-    return login
+    if not buscar_correo:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Correo no encotrado")
+
+    if buscar_correo.cod_verificacion_login != codigo:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Codigo Invalido")
+
+    buscar_correo.verificacion_login = True
+    db.commit()
+
+    return {"Message": "Correo Verificado"}
 
 
 @route.post("/", description="Crea un registro de un usuario")
@@ -45,7 +56,7 @@ async def registroLogin(login: LoginCreateModel, db: session = Depends(get_db)):
         email_corporativo_login=login.EMAIL_CORPORATIVO_LOGIN,
         contraseña_login=hashed_password,
         id_usuario=login.ID_USUARIO,
-        verificacion_login=True,
+        verificacion_login=False,
         cod_verificacion_login=codigo_verificacion
     )
 
