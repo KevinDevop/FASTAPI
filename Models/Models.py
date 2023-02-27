@@ -39,14 +39,14 @@ class BSC_PAIS(Base):
 class BSC_DEPARTAMENTO(Base):
     __tablename__ = 'BSC_DEPARTAMENTO'
     id_departamento = Column(Integer, primary_key=True, autoincrement=True)
-    nombre_departamento = Column(String)
-    id_pais = Column(Integer, ForeignKey('BSC_PAIS.id_pais'))
+    nombre_departamento = Column(String, nullable=False)
+    id_pais = Column(Integer, ForeignKey('BSC_PAIS.id_pais'), nullable=False)
     pais = relationship("BSC_PAIS")
 
 
 class BSC_CIUDAD(Base):
     __tablename__ = 'BSC_CIUDAD'
-    id_ciudad = Column(Integer, primary_key=True)
+    id_ciudad = Column(Integer, primary_key=True, autoincrement=True)
     nombre_ciudad = Column(String, nullable=False)
     id_departamento = Column(Integer, ForeignKey(
         'BSC_DEPARTAMENTO.id_departamento'), nullable=False)
@@ -73,7 +73,7 @@ class BSC_BITACORA(Base):
     descripcion_bitacora = Column(String, nullable=False)
     fecha_creacion_bitacora = Column(DATETIME, nullable=False)
     id_usuario = Column(Integer, ForeignKey(
-        BSC_USUARIO.id_usuario), nullable=False)
+        'BSC_USUARIO.id_usuario'), nullable=False)
     usuario = relationship("BSC_USUARIO")
 
 
@@ -91,13 +91,14 @@ class BSC_ESTADO(Base):
 
 class BSC_LOGIN(Base):
     __tablename__ = "BSC_LOGIN"
-    id_login = Column(Integer, primary_key=True)
-    email_corporativo = Column(String, nullable=False)
+    id_login = Column(Integer, primary_key=True, index=True)
+    email_corporativo_login = Column(String, nullable=False)
     contraseña_login = Column(String, nullable=False)
+    salt_contraseña = Column(String, nullable=False)
     id_usuario = Column(Integer, ForeignKey(
-        BSC_USUARIO.id_usuario), nullable=False)
+        'BSC_USUARIO.id_usuario'), nullable=False)
     verificacion_login = Column(SmallInteger, nullable=False)
-    cod_verificacion = Column(String, nullable=False)
+    cod_verificacion_login = Column(String, nullable=False)
     usuario = relationship("BSC_USUARIO")
 
 
@@ -168,18 +169,18 @@ class MAP_PRACTICANTE(Base):
     fecha_ingreso = Column(DATE, nullable=False)
     acceso_biometrico = Column(String, nullable=False)
     id_tipo_practica = Column(
-        Integer, ForeignKey(MAP_TIPO_PRACTICA.id_practica), nullable=False)
+        Integer, ForeignKey('MAP_TIPO_PRACTICA.id_practica'), nullable=False)
     id_institucion = Column(Integer, ForeignKey(
-        MAP_INSTITUCION.id_institucion), nullable=False)
-    id_piso = Column(Integer, ForeignKey(MAP_PISO.id_piso), nullable=False)
+        'MAP_INSTITUCION.id_institucion'), nullable=False)
+    id_piso = Column(Integer, ForeignKey('MAP_PISO.id_piso'), nullable=False)
     id_lider_funcional = Column(Integer, ForeignKey(
-        MAP_FUNCIONAL.id_lider_funcional), nullable=False)
+        'MAP_FUNCIONAL.id_lider_funcional'), nullable=False)
     id_lider_administrativo = Column(Integer, ForeignKey(
-        MAP_ADMINISTRATIVO.id_lider_administrativo), nullable=False)
+        'MAP_ADMINISTRATIVO.id_lider_administrativo'), nullable=False)
     id_lider_entrenamiento = Column(Integer, ForeignKey(
-        MAP_ENTRENAMIENTO.id_lider_entrenamiento), nullable=False)
+        'MAP_ENTRENAMIENTO.id_lider_entrenamiento'), nullable=False)
     id_usuario = Column(Integer, ForeignKey(
-        BSC_USUARIO.id_usuario), nullable=False)
+        'BSC_USUARIO.id_usuario'), nullable=False)
     tipo_practica = relationship(
         "MAP_TIPO_PRACTICA", back_populates="practicante")
     institucion = relationship("MAP_INSTITUCION", back_populates="institucion")
@@ -198,7 +199,7 @@ class MAP_ASISTENCIA(Base):
     id_asistencia = Column(Integer, primary_key=True)
     registro = Column(DATE, nullable=False)
     id_practicante = Column(Integer, ForeignKey(
-        MAP_PRACTICANTE.id_practicante), nullable=False)
+        'MAP_PRACTICANTE.id_practicante'), nullable=False)
     practicante = relationship("MAP_PRACTICANTE")
 
 
@@ -208,6 +209,6 @@ class MAP_HORARIO_PRACTICANTE(Base):
     id_practicante = Column(Integer, ForeignKey(
         MAP_PRACTICANTE.id_practicante), nullable=False)
     id_horario = Column(Integer, ForeignKey(
-        MAP_HORARIO.id_horario), nullable=False)
+        'MAP_HORARIO.id_horario'), nullable=False)
     practicante = relationship("MAP_PRACTICANTE")
     horario = relationship("MAP_HORARIO")
