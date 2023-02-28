@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from sqlalchemy.orm import session
 from db import get_db
-from Models.Models import BSC_LOGIN
-from Schemas.BSC_LOGIN import BSC_LOGIN_SCHEMA, LOGIN_SCHEMA, BSC_LOGIN_POST_SCHEMA
+from Models.Models import BSC_LOGIN, BSC_USUARIO
+from Schemas.BSC_LOGIN import BSC_LOGIN_SCHEMA, LOGIN_SCHEMA, BSC_LOGIN_POST_SCHEMA, Token
 from sendemail import codigoEmail
 from bcrypt import gensalt, hashpw, checkpw
 from sqlalchemy.exc import SQLAlchemyError
@@ -10,11 +11,14 @@ from jwt import ACCESS_TOKEN_EXPIRE_MINUTES, createToken
 from datetime import timedelta
 import random
 
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="BSC_LOGIN/login")
+
 route = APIRouter(prefix="/BSC_LOGIN", tags=["BSC_LOGIN"])
 
 
 @route.get("/", description="Lista los registro de bsc_login")
-async def getLogin(db: session = Depends(get_db)):
+async def getLogin(db: session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     users = db.query(BSC_LOGIN).all()
 
     return [BSC_LOGIN_SCHEMA(
@@ -75,27 +79,31 @@ async def registroLogin(login: BSC_LOGIN_POST_SCHEMA, db: session = Depends(get_
     return db_registro
 
 
-@route.post("/login", description="Se hace el Login")
-async def Login(login: LOGIN_SCHEMA, db: session = Depends(get_db)):
+@route.post("/login", response_model=Token, description="Inicio de sesión!")
+async def Login(db: session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     user = db.query(BSC_LOGIN).filter(
-        BSC_LOGIN.email_corporativo_login == login.EMAIL_CORPORATIVO_LOGIN).first()
+        BSC_LOGIN.email_corporativo_login == form_data.username).first()
 
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales invalidas ☠️")
 
-    if not user.verificacion_login == True:
+    if not user.verificacion_login:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail="Su correo no ha sido validado.")
 
-    print(user.contraseña_login.encode('utf-8'))
-    print(login.CONTRASEÑA_LOGIN.encode('utf-8'))
-
-    if not checkpw(login.CONTRASEÑA_LOGIN.encode('utf-8'), user.contraseña_login.encode('utf-8')):
+    if not checkpw(form_data.password.encode('utf-8'), user.contraseña_login.encode('utf-8')):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED,
                             detail="Credenciales invalidas ☠️")
 
-    access_token_expire = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = createToken(user.id_usuario, access_token_expire)
+    info = db.query(BSC_USUARIO).filter(
+        BSC_USUARIO.id_usuario == user.id_usuario).first()
 
-    return {"access-token": access_token, "token_type": "bearer"}
+    access_token_expire = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = createToken(
+        {"id_usuario": user.id_usuario,
+         "nombre": info.nombre_apellido_usuario,
+         "id_rol": info.id_rol},
+        access_token_expire)
+
+    return {"access_token": access_token, "token_type": "bearer"}

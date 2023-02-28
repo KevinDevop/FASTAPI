@@ -25,3 +25,8 @@ class BSC_LOGIN_POST_SCHEMA(BaseModel):
 class LOGIN_SCHEMA(BaseModel):
     EMAIL_CORPORATIVO_LOGIN: str
     CONTRASEÑA_LOGIN: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

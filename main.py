@@ -1,5 +1,8 @@
 from fastapi import FastAPI
+from fastapi.security import OAuth2PasswordBearer
 from Routes import bsc_departamento, bsc_pais, bsc_idioma, bsc_usuario, bsc_ciudad, map_administrativos, map_piso, map_practicante, bsc_login, bsc_bitacora
+
+
 
 app = FastAPI()
 
