@@ -4,28 +4,26 @@ from sqlalchemy.orm import session
 from db import get_db
 from Models.Models import BSC_LOGIN, BSC_USUARIO
 from Schemas.BSC_LOGIN import BSC_LOGIN_SCHEMA, LOGIN_SCHEMA, BSC_LOGIN_POST_SCHEMA, Token
+from Schemas.BSC_USUARIO import BSC_USUARIO_SCHEMA
 from sendemail import codigoEmail
 from bcrypt import gensalt, hashpw, checkpw
 from sqlalchemy.exc import SQLAlchemyError
-from jwt import ACCESS_TOKEN_EXPIRE_MINUTES, createToken
+from jwt import ACCESS_TOKEN_EXPIRE_MINUTES, createToken, getCurrrentActiveUser
 from datetime import timedelta
 import random
 
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="BSC_LOGIN/login")
 
 route = APIRouter(prefix="/BSC_LOGIN", tags=["BSC_LOGIN"])
 
 
 @route.get("/", description="Lista los registro de bsc_login")
-async def getLogin(db: session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+async def getLogin(db: session = Depends(get_db), token: BSC_USUARIO_SCHEMA = Depends(getCurrrentActiveUser)):
     users = db.query(BSC_LOGIN).all()
 
     return [BSC_LOGIN_SCHEMA(
         ID_LOGIN=user.id_login,
         EMAIL_CORPORATIVO_LOGIN=user.email_corporativo_login,
         CONTRASEÑA_LOGIN=user.contraseña_login,
-        SALT_CONTRASEÑA=user.salt_contraseña,
         ID_USUARIO=user.id_usuario,
         VERIFICACION_LOGIN=user.verificacion_login,
         COD_VERIFICACION_LOGIN=user.cod_verificacion_login)
@@ -63,7 +61,6 @@ async def registroLogin(login: BSC_LOGIN_POST_SCHEMA, db: session = Depends(get_
         email_corporativo_login=login.EMAIL_CORPORATIVO_LOGIN,
         contraseña_login=hashed_password,
         id_usuario=login.ID_USUARIO,
-        salt_contraseña=salt,
         verificacion_login=False,
         cod_verificacion_login=codigo_verificacion
     )

@@ -20,7 +20,8 @@ async def GetCiudadesDepartameto(db: Session = Depends(get_db)):
     ciudades = db.query(BSC_CIUDAD, BSC_DEPARTAMENTO).join(
         BSC_DEPARTAMENTO, BSC_CIUDAD.id_departamento == BSC_DEPARTAMENTO.id_departamento).all()
 
-    result = [BSC_CIUDAD_DEPARTAMENTO_SCHEMA(ID_CIUDAD=ciudad.id_ciudad, NOMBRE_CIUDAD=ciudad.nombre_ciudad,
+    result = [BSC_CIUDAD_DEPARTAMENTO_SCHEMA(ID_CIUDAD=ciudad.id_ciudad,
+                                             NOMBRE_CIUDAD=ciudad.nombre_ciudad,
                                              NOMBRE_DEPARTAMENTO=departamento.nombre_departamento) for ciudad, departamento in ciudades]
 
     return result

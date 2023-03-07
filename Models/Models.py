@@ -94,7 +94,6 @@ class BSC_LOGIN(Base):
     id_login = Column(Integer, primary_key=True, index=True)
     email_corporativo_login = Column(String, nullable=False)
     contraseña_login = Column(String, nullable=False)
-    salt_contraseña = Column(String, nullable=False)
     id_usuario = Column(Integer, ForeignKey(
         'BSC_USUARIO.id_usuario'), nullable=False)
     verificacion_login = Column(SmallInteger, nullable=False)

@@ -6,9 +6,8 @@ class BSC_LOGIN_SCHEMA(BaseModel):
     ID_LOGIN: int
     EMAIL_CORPORATIVO_LOGIN: str
     CONTRASEÑA_LOGIN: str
-    SALT_CONTRASEÑA: str
     ID_USUARIO: int
-    VERIFICACION_LOGIN: str
+    VERIFICACION_LOGIN: bool
     COD_VERIFICACION_LOGIN: str
 
 
@@ -30,3 +29,7 @@ class LOGIN_SCHEMA(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class TokenData(BaseModel):
+    id_usuario: int | None = None

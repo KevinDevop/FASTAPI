@@ -10,7 +10,7 @@ class BSC_USUARIO_SCHEMA(BaseModel):
     FECHA_NACIMIENTO: date
     CORREO_PERSONAL_USUARIO: str
     DIRECCION_USUARIO: str
-    ESTADO_LOGICO_USUARIO: int
+    ESTADO_LOGICO_USUARIO: bool
     TELEFONO_USUARIO: str
     FOTO_USUARIO: Optional[str] = None
     ID_ROL: int

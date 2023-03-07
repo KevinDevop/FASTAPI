@@ -3,13 +3,14 @@ from sqlalchemy.orm import Session, joinedload
 from db import get_db
 from Models.Models import MAP_PRACTICANTE
 from Schemas.MAP_PRACTICANTE import MAP_PRACTICANTE_SCHEMA, MAP_PRACTICANTE_COMPLETE_SCHEMA
+from jwt import getCurrrentActiveUser
 
 
 route = APIRouter(prefix="/MAP_PRACTICANTE", tags=["MAP_PRACTICANTE"])
 
 
 @route.get("/", description="Retorna toda la información de los practicantes.")
-async def getPranticantes(db: Session = Depends(get_db)):
+async def getPranticantes(db: Session = Depends(get_db), token: str = Depends(getCurrrentActiveUser)):
     practicantes = db.query(MAP_PRACTICANTE).all()
 
     result = [MAP_PRACTICANTE_SCHEMA(
