@@ -1,2 +1,2 @@
 # FASTAPI
-Creamos una API en python con el framework FASTAPI, basando en mi experiencia.
+Creamos una API en python con el framework FASTAPI, guiandome con videos y documentación oficial.
